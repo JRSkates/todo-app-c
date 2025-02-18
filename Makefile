@@ -1,12 +1,15 @@
 CC = gcc
+CFLAGS = -Wall -Wextra -g
+LDFLAGS = -lsqlite3
 
 SRC = src/main.c src/db.c src/tasks.c
-EXEC = todo
+OBJ = $(SRC:.c=.o)
+TARGET = todo
 
-all: $(EXEC)
+all: $(TARGET)
 
-$(EXEC): ${SRC}
-		$(CC) $(SRC) -o $(EXEC)
+$(TARGET): $(SRC)
+	$(CC) $(CFLAGS) $(SRC) -o $(TARGET) $(LDFLAGS)
 
 clean:
-		rm -f (EXEC)
+	rm -f $(TARGET) $(OBJ)

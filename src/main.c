@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
+#include <sqlite3.h>
 #include "db.h"
 #include "tasks.h"
 
@@ -14,6 +15,20 @@ int main() {
     char selection[5];
     int user_choice;
     int running = 1;
+
+    sqlite3 *db;
+    //char *zErrMsg = 0;
+    int rc;
+
+    rc = sqlite3_open("todo.db", &db);
+
+    if( rc ) {
+        fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
+        return(0);
+    } else {
+        fprintf(stderr, "Opened database successfully\n");
+    }
+
     while (running == 1) {
 
         // Read input using fgets
@@ -33,8 +48,16 @@ int main() {
 
         switch (user_choice) {
             case(1): {
-                printf("Add Task\n");
-                //add_task(const char *title);
+                char title[256];  // Allocate a fixed-size buffer
+                printf("Enter the title of your task:\n");
+
+                if (fgets(title, sizeof(title), stdin) == NULL) {
+                    printf("Error reading input. Exiting.\n");
+                } else {
+                    title[strcspn(title, "\n")] = 0;  // Remove newline from input
+                    add_task(db, title);
+                }
+
                 break;
             } 
             case(2): {
@@ -65,6 +88,7 @@ int main() {
             }
         }
     }
+    sqlite3_close(db);
     return 0;
 }
 
