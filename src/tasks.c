@@ -26,13 +26,35 @@ void add_task(sqlite3 *db, const char *title) {
     sqlite3_finalize(stmt);
 }
 
-void list_tasks() {
+void list_tasks(sqlite3 *db) {
+    const char *sql = "SELECT * FROM TASKS;";
+    sqlite3_stmt *stmt;
+
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, NULL) != SQLITE_OK) {
+        printf("Error preparing statement: %s\n", sqlite3_errmsg(db));
+        return;
+    }
+
+    printf("ID | Title                     | Status\n");
+    printf("----------------------------------------\n");
+
+    while (sqlite3_step(stmt) == SQLITE_ROW) {
+        Task task; // Struct to store retrieved data
+        task.id = sqlite3_column_int(stmt, 0);
+        strncpy(task.title, (const char *)sqlite3_column_text(stmt, 1), 255);
+        task.completed = sqlite3_column_int(stmt, 2);
+
+        printf("%d  | %-25s | %s\n", task.id, task.title, task.completed ? "Done" : "Pending");
+    }
+
+    sqlite3_finalize(stmt);
 
 }
-void mark_task_complete(int id) {
+
+void mark_task_complete(sqlite3 *db, int id) {
 
 }
 
-void delete_task(int id) {
+void delete_task(sqlite3 *db, int id) {
 
 }

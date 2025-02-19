@@ -61,8 +61,8 @@ int main() {
                 break;
             } 
             case(2): {
-                printf("List Tasks\n");
-                //list_tasks();
+                printf("Your List: \n");
+                list_tasks(db);
                 break;
             }
             case(3): {
@@ -99,7 +99,7 @@ void display_menu() {
     printf("1. Add Task\n");
     printf("2. List Tasks\n");
     printf("3. Mark Task as Complete\n");
-    printf("2. Delete Task\n");
+    printf("4. Delete Task\n");
     printf("5. Exit\n");
     printf("==============================\n");
 }
